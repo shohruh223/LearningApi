@@ -23,16 +23,16 @@ class IntegerRangeField(IntegerField):
 
 class Course(DescriptionBaseModel, DeletedModel):
     title = CharField(max_length=255)
-    rating = IntegerRangeField(min_value=1, max_value=5)
+    rating = IntegerRangeField(min_value=1, max_value=5, null=True, blank=True)
     logo = ImageField(upload_to='course-logos/')
-    image = ImageField(upload_to='course-image/')
+    image = ImageField(upload_to='course-images/')
     price = PositiveIntegerField(default=300_000)
     category = ForeignKey('CourseCategory', SET_NULL, null=True, blank=True)
     slug = SlugField(unique=True)
     course_duration = PositiveSmallIntegerField(default=3)
     author = ForeignKey('users.User', CASCADE, 'author')
-    start_date = FloatField()
-    end_date = FloatField()
+    start_date = FloatField(null=True, blank=True)
+    end_date = FloatField(null=True, blank=True)
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         if not self.slug:
@@ -44,9 +44,6 @@ class Course(DescriptionBaseModel, DeletedModel):
 
     class Meta:
         verbose_name_plural = 'Courses'
-
-
-
 
 
 class Chapter(DescriptionBaseModel):
