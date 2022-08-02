@@ -7,17 +7,17 @@ from apps.shared.models import BaseModel
 
 class CustomUserManager(BaseUserManager):
 
-    def create_user(self, email, password=None, **extra_fields):
-        if not email:
-            raise ValueError('Users must have a email!')
+    def create_user(self, username, password=None, **extra_fields):
+        if not username:
+            raise ValueError('Users must have a username!')
 
-        user = self.model(email=email, **extra_fields)
+        user = self.model(username=username, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password=None, **extra_fields):
-        user = self.create_user(email, password, **extra_fields)
+    def create_superuser(self, username, password=None, **extra_fields):
+        user = self.create_user(username, password, **extra_fields)
         user.is_staff = True
         user.is_superuser = True
         user.save(using=self._db)
@@ -25,20 +25,19 @@ class CustomUserManager(BaseUserManager):
 
 
 class User(AbstractUser):
-    INSTRUCTOR = 'instructor'
+    INSTRUCTOR = 'teacher'
     STUDENT = 'student'
     ROLES = (
-        (INSTRUCTOR, 'instructor'),
+        (INSTRUCTOR, 'teacher'),
         (STUDENT, 'student')
     )
-    username = CharField(max_length=255)
-    email = EmailField(unique=True)
+    username = CharField(max_length=255, unique=True)
     role = CharField(max_length=18, choices=ROLES)
 
     # reward = ManyToManyField('Reward', 'users')
-    members = ManyToManyField('course.CourseModel', 'students')
+    members = ManyToManyField('course.Course', 'students')
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = []
 
     objects = CustomUserManager()

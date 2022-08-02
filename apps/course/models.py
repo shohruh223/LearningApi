@@ -1,5 +1,6 @@
 from django.db.models import IntegerField, Model, CharField, SlugField, ImageField, FloatField, DecimalField, \
     PositiveIntegerField, PositiveSmallIntegerField, ForeignKey, SET_NULL, CASCADE
+from django.utils.text import slugify
 
 from apps.shared.models import DescriptionBaseModel, DeletedModel
 
@@ -20,7 +21,7 @@ class IntegerRangeField(IntegerField):
         return super(IntegerRangeField, self).formfield(**defaults)
 
 
-class CourseModel(DescriptionBaseModel, DeletedModel):
+class Course(DescriptionBaseModel, DeletedModel):
     title = CharField(max_length=255)
     rating = IntegerRangeField(min_value=1, max_value=5)
     logo = ImageField(upload_to='course-logos/')
@@ -28,19 +29,29 @@ class CourseModel(DescriptionBaseModel, DeletedModel):
     price = PositiveIntegerField(default=300_000)
     category = ForeignKey('CourseCategory', SET_NULL, null=True, blank=True)
     slug = SlugField(unique=True)
-    author = ForeignKey('users.User', CASCADE, 'author')
-
-
-class Meta:
-    category = ForeignKey('CourseModel', CASCADE)
     course_duration = PositiveSmallIntegerField(default=3)
+    author = ForeignKey('users.User', CASCADE, 'author')
     start_date = FloatField()
     end_date = FloatField()
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        if not self.slug:
+            self.slug = slugify(self.title)
+            while Course.objects.filter(slug=self.slug).exists():
+                self.slug = f'{self.slug}-1'
+
+        super().save(force_insert, force_update, using, update_fields)
+
+    class Meta:
+        verbose_name_plural = 'Courses'
+
+
+
 
 
 class Chapter(DescriptionBaseModel):
     title = CharField(max_length=255)
-    category = ForeignKey(CourseModel, CASCADE)
+    category = ForeignKey(Course, CASCADE)
 
 
 class Lesson(DescriptionBaseModel, DeletedModel):
@@ -53,7 +64,7 @@ class Lesson(DescriptionBaseModel, DeletedModel):
 
 class Comment(DescriptionBaseModel, DeletedModel):
     author = ForeignKey('users.User', CASCADE)
-    course = ForeignKey(CourseModel, CASCADE)
+    course = ForeignKey(Course, CASCADE)
 
 
 
