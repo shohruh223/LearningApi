@@ -48,4 +48,3 @@ class CourseModelViewSet(ModelViewSet):
     #     courses = Course.objects.all()
     #     serializer = CourseModelSerializer(data=courses, many=True)
     #     return Response(data=serializer.data)
-

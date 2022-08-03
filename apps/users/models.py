@@ -46,4 +46,3 @@ class User(AbstractUser):
         verbose_name = 'user'
         verbose_name_plural = 'users'
 
-

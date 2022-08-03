@@ -25,7 +25,6 @@ class CourseCategoryModelSerializer(ModelSerializer):
 class CourseModelSerializer(ModelSerializer):
     title = CharField(max_length=255)
 
-
     def validate_title(self, title):
         if Course.objects.filter(title=title).exists():
             raise ValidationError('This course name already exists')
@@ -34,7 +33,6 @@ class CourseModelSerializer(ModelSerializer):
             raise ValidationError('The course_name should have only chairs ')
 
         return title
-
 
     class Meta:
         model = Course

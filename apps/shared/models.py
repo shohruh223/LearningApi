@@ -22,6 +22,3 @@ class DeletedModel(Model):
 
     class Meta:
         abstract = True
-
-
-

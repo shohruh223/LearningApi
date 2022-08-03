@@ -56,14 +56,9 @@ class Lesson(DescriptionBaseModel, DeletedModel):
     price = DecimalField(max_digits=12, decimal_places=2)
     chapter = ForeignKey(Chapter, CASCADE, "lessons")
     duration = PositiveSmallIntegerField(default=10)
-    slug= SlugField(unique=True)
+    slug = SlugField(unique=True)
 
 
 class Comment(DescriptionBaseModel, DeletedModel):
     author = ForeignKey('users.User', CASCADE)
     course = ForeignKey(Course, CASCADE)
-
-
-
-
-

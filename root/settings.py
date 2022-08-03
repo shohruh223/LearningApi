@@ -3,7 +3,6 @@ import sys
 from pathlib import Path
 import environ
 
-
 env = environ.Env(
     # set casting, default value
     DEBUG=(bool, False)
@@ -41,13 +40,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'ckeditor',
-    #apps
+    # apps
     'apps.users',
     'apps.course',
     'apps.billing',
     'apps.shared',
     'drf_yasg',
     'rest_framework',
+
+    # installed apps
+    'rangefilter',
 
 ]
 
@@ -93,13 +95,13 @@ WSGI_APPLICATION = 'root.wsgi.application'
 
 DATABASES = {
     'default': {
-    'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('DB_NAME'),
-        'USER': env('DB_USER'),
-        'PASSWORD': env('DB_PASSWORD'),
-        'HOST': env('DB_HOST', default='localhost'),
-        'PORT': '5432',
-    }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3'}
+    #     'USER': env('DB_USER'),
+    #     'PASSWORD': env('DB_PASSWORD'),
+    #     'HOST': env('DB_HOST', default='localhost'),
+    #     'PORT': '5432',
+    # }
 }
 
 # Password validation
@@ -152,4 +154,3 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
 }
-
