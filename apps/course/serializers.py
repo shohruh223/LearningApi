@@ -70,4 +70,4 @@ class LessonModelSerializer(ModelSerializer):
 class CommentModelSerializer(ModelSerializer):
     class Meta:
         model = Comment
-        fields = ('id','text','author','course')
+        fields = ('id', 'text', 'author', 'course')
