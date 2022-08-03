@@ -8,7 +8,7 @@ login = 'admin'
 password = '1'
 
 
-class CategoryTestCase(test.APITestCase):
+class CourseTestCase(test.APITestCase):
     fixtures = [
         'category.json'
     ]
@@ -53,7 +53,7 @@ class CategoryTestCase(test.APITestCase):
         return response.data.get('id')
 
     def test_get_list(self):
-        url = reverse('category-list')
+        url = reverse('course-list')
         response = self.client.get(url)
 
         self.assertEquals(status.HTTP_200_OK, response.status_code)
@@ -72,7 +72,7 @@ class CategoryTestCase(test.APITestCase):
 
     def test_delete(self):
         pk = self.test_get_pk()
-        url = reverse('category-detail', kwargs={"pk": pk})
+        url = reverse('course-detail', kwargs={"pk": pk})
         response = self.client.delete(url)
         self.assertEquals(status.HTTP_204_NO_CONTENT, response.status_code)
 
