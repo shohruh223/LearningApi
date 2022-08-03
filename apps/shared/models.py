@@ -9,9 +9,7 @@ class BaseModel(Model):
         abstract = True
 
 
-class DescriptionBaseModel(Model):
-    create_at = DateTimeField(auto_now_add=True)
-    update_at = DateTimeField(auto_now=True)
+class DescriptionBaseModel(BaseModel):
     text = TextField(null=True, blank=True)
 
     class Meta:
