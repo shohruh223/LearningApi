@@ -5,8 +5,9 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from apps.course.models import CourseCategory, Course
-from apps.course.serializers import CourseCategoryModelSerializer, CourseModelSerializer
+from apps.course.models import CourseCategory, Course, Chapter, Lesson, Comment
+from apps.course.serializers import CourseCategoryModelSerializer, CourseModelSerializer, ChapterModelSerializer, \
+    LessonModelSerializer, CommentModelSerializer
 
 
 class CourseCategoryModelViewSet(ModelViewSet):
@@ -48,3 +49,24 @@ class CourseModelViewSet(ModelViewSet):
     #     courses = Course.objects.all()
     #     serializer = CourseModelSerializer(data=courses, many=True)
     #     return Response(data=serializer.data)
+
+
+class ChapterModelViewSet(ModelViewSet):
+    serializer_class = ChapterModelSerializer
+    queryset = Chapter.objects.all()
+    lookup_url_kwarg = 'id'
+    permission_classes = (AllowAny,)
+
+
+class LessonModelViewSet(ModelViewSet):
+    serializer_class = LessonModelSerializer
+    queryset = Lesson.objects.all()
+    lookup_url_kwarg = 'id'
+    permission_classes = (AllowAny,)
+
+
+class CommentModelViewSet(ModelViewSet):
+    serializer_class = CommentModelSerializer
+    queryset = Comment.objects.all()
+    lookup_url_kwarg = 'id'
+    permission_classes = (AllowAny,)
