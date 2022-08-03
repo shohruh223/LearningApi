@@ -2,6 +2,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models import IntegerField, Model, CharField, SlugField, ImageField, FloatField, DecimalField, \
     PositiveIntegerField, PositiveSmallIntegerField, ForeignKey, SET_NULL, CASCADE, DateField
 from django.utils.text import slugify
+
 from apps.shared.models import DescriptionBaseModel, DeletedModel
 
 
@@ -17,8 +18,11 @@ class CourseCategory(Model):
 
         super().save(force_insert, force_update, using, update_fields)
 
+    def __str__(self):
+        return self.title
+
     class Meta:
-        verbose_name_plural = 'caourse_category'
+        verbose_name_plural = 'course_category'
         db_table = 'course_category'
 
 
@@ -60,7 +64,7 @@ class Course(DescriptionBaseModel, DeletedModel):
         super().save(force_insert, force_update, using, update_fields)
 
     def __str__(self):
-        return self.category.title
+        return self.title
 
     class Meta:
         verbose_name_plural = 'Courses'
@@ -72,7 +76,7 @@ class Chapter(DescriptionBaseModel):
     category = ForeignKey(Course, CASCADE)
 
     def __str__(self):
-        return self.category.title
+        return self.title
 
     class Meta:
         verbose_name_plural = 'Chapters'
@@ -94,7 +98,7 @@ class Lesson(DescriptionBaseModel, DeletedModel):
         super().save(force_insert, force_update, using, update_fields)
 
     def __str__(self):
-        return self.chapter
+        return self.title
 
     class Meta:
         verbose_name_plural = 'Lessons'
@@ -106,7 +110,7 @@ class Comment(DescriptionBaseModel, DeletedModel):
     course = ForeignKey(Course, CASCADE)
 
     def __str__(self):
-        return f'{self.author.username}:{self.course.title}'
+        return f'{self.author.username}:{self.course}:{self.text}'
 
     class Meta:
         verbose_name_plural = 'Comments'
