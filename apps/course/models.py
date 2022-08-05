@@ -41,19 +41,19 @@ class Course(DescriptionBaseModel, DeletedModel):
     title = CharField(max_length=255)
     rating = IntegerField(
         validators=[
-            MaxValueValidator(5, 'The higest mark is 5'),
-            MinValueValidator(2, 'The youngest mark is 2')
+            MaxValueValidator(5, 'The highest mark is 5'),
+            MinValueValidator(2, 'The minimum mark is 2')
         ]
     )
     logo = ImageField(upload_to='course-logos/')
     image = ImageField(upload_to='course-image/')
     price = PositiveIntegerField(default=300_000)
     category = ForeignKey('Category', SET_NULL, null=True, blank=True)
-    slug = SlugField(unique=True)
     course_duration = PositiveSmallIntegerField(default=3)
     author = ForeignKey('users.User', CASCADE, 'author')
     start_date = DateField(null=True, blank=True)
     end_date = DateField(null=True, blank=True)
+    slug = SlugField(unique=True)
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         if not self.slug:

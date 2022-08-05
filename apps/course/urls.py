@@ -9,8 +9,8 @@ router = DefaultRouter()
 router.register('category', CourseCategoryModelViewSet),
 router.register('chapter', ChapterModelViewSet),
 router.register('course', CourseModelViewSet),
-router.register('lesson',LessonModelViewSet),
-router.register('comment',CommentModelViewSet)
+router.register('lesson', LessonModelViewSet),
+router.register('comment', CommentModelViewSet)
 
 urlpatterns = [
     path('', include(router.urls))
