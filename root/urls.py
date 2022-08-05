@@ -11,11 +11,11 @@ from drf_yasg import openapi
 schema_view = get_schema_view(
     openapi.Info(
         title="Learning API",
-        default_version='v1',
-        description="Learning academy. The strongest programming academy in Uzbekistan",
+        default_version='v4',
+        description="We are making API for Education",
         terms_of_service="https://www.google.com/policies/terms/",
-        contact=openapi.Contact(email="shohruh.abd1997@gmail.com"),
-        license=openapi.License(name="BSD License"),
+        contact=openapi.Contact(email="learning@api.local"),
+        license=openapi.License(name="SMA License"),
     ),
     public=True,
     permission_classes=[permissions.AllowAny],

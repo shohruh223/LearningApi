@@ -12,9 +12,6 @@ class CourseCategoryModelSerializer(ModelSerializer):
         if Category.objects.filter(title=title).exists():
             raise ValidationError('This category name already taken')
 
-        if not title.isalpha():
-            raise ValidationError('The course_category should have only chairs')
-
         return title
 
     class Meta:
@@ -24,20 +21,18 @@ class CourseCategoryModelSerializer(ModelSerializer):
 
 class CourseModelSerializer(ModelSerializer):
     title = CharField(max_length=255)
-    author = HiddenField(default=CurrentUserDefault)
+    author = HiddenField(default=CurrentUserDefault())
 
     def validate_title(self, title):
         if Course.objects.filter(title=title).exists():
-            raise ValidationError('This course name already exists')
-
-        if not title.isalpha():
-            raise ValidationError('The course_name should have only chairs ')
+            raise ValidationError('This course name already taken')
 
         return title
 
+
     class Meta:
         model = Course
-        fields = "__all__"
+        exclude = ('create_at', 'update_at', 'text', 'deleted_at', 'is_deleted', 'logo', 'slug')
 
 
 class ChapterModelSerializer(ModelSerializer):
