@@ -6,8 +6,8 @@ from apps.course.views import CourseCategoryModelViewSet, CourseModelViewSet, Ch
 
 router = DefaultRouter()
 
-router.register('course-category', CourseCategoryModelViewSet),
-router.register('course-chapter', ChapterModelViewSet),
+router.register('category', CourseCategoryModelViewSet),
+router.register('chapter', ChapterModelViewSet),
 router.register('course', CourseModelViewSet),
 router.register('lesson',LessonModelViewSet),
 router.register('comment',CommentModelViewSet)

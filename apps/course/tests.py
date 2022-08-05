@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import test, status
 from rest_framework.reverse import reverse
 
-from apps.course.models import CourseModel
+from apps.course.models import Course
 
 login = 'admin'
 password = '1'
@@ -57,7 +57,7 @@ class CourseTestCase(test.APITestCase):
         response = self.client.get(url)
 
         self.assertEquals(status.HTTP_200_OK, response.status_code)
-        self.assertEquals(CourseModel.objects.count(), 4)
+        self.assertEquals(Course.objects.count(), 4)
 
     def test_update(self):
         pk = self.test_get_pk()

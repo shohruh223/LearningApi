@@ -1,15 +1,15 @@
 from rest_framework.exceptions import ValidationError
-from rest_framework.fields import CharField, SlugField
+from rest_framework.fields import CharField, SlugField, HiddenField, CurrentUserDefault
 from rest_framework.serializers import Serializer, ModelSerializer, HyperlinkedModelSerializer
 
-from apps.course.models import CourseCategory, Course, Chapter, Lesson, Comment
+from apps.course.models import Category, Course, Chapter, Lesson, Comment
 
 
 class CourseCategoryModelSerializer(ModelSerializer):
     title = CharField(max_length=255)
 
-    def validated_title(self, title):
-        if CourseCategory.objects.filter(title=title).exists():
+    def validate_title(self, title):
+        if Category.objects.filter(title=title).exists():
             raise ValidationError('This category name already taken')
 
         if not title.isalpha():
@@ -18,12 +18,13 @@ class CourseCategoryModelSerializer(ModelSerializer):
         return title
 
     class Meta:
-        model = CourseCategory
+        model = Category
         fields = ('id', 'title')
 
 
 class CourseModelSerializer(ModelSerializer):
     title = CharField(max_length=255)
+    author = HiddenField(default=CurrentUserDefault)
 
     def validate_title(self, title):
         if Course.objects.filter(title=title).exists():
@@ -36,7 +37,7 @@ class CourseModelSerializer(ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ('id', 'title', 'rating', 'price', 'image', 'category', 'author', 'start_date', 'end_date')
+        fields = "__all__"
 
 
 class ChapterModelSerializer(ModelSerializer):

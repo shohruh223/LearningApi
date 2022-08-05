@@ -1,20 +1,20 @@
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from apps.course.models import CourseCategory, Course, Chapter, Lesson, Comment
+from apps.course.models import Category, Course, Chapter, Lesson, Comment
 from apps.course.serializers import CourseCategoryModelSerializer, CourseModelSerializer, ChapterModelSerializer, \
     LessonModelSerializer, CommentModelSerializer
 
 
 class CourseCategoryModelViewSet(ModelViewSet):
     serializer_class = CourseCategoryModelSerializer
-    queryset = CourseCategory.objects.all()
+    queryset = Category.objects.all()
     lookup_url_kwarg = 'id'
-    permission_classes = (AllowAny,)
+    permission_classes = ()
 
     # def create(self, request, *args, **kwargs):
     #     serializer = CourseCategoryModelSerializer(data=request.data)
@@ -24,7 +24,7 @@ class CourseCategoryModelViewSet(ModelViewSet):
     #     return Response(data=data, status=status.HTTP_201_CREATED)
     #
     # def list(self, request, *args, **kwargs):
-    #     categories = CourseCategory.objects.all()
+    #     categories = Category.objects.all()
     #     serializer = CourseCategoryModelSerializer(data=categories, many=True)
     #     return Response(data=serializer.data)
 
@@ -33,7 +33,7 @@ class CourseModelViewSet(ModelViewSet):
     serializer_class = CourseModelSerializer
     queryset = Course.objects.all()
     lookup_url_kwarg = 'id'
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
     parser_classes = (MultiPartParser,)
 
     # def create(self, request, *args, **kwargs):
@@ -55,18 +55,18 @@ class ChapterModelViewSet(ModelViewSet):
     serializer_class = ChapterModelSerializer
     queryset = Chapter.objects.all()
     lookup_url_kwarg = 'id'
-    permission_classes = (AllowAny,)
+    permission_classes = ()
 
 
 class LessonModelViewSet(ModelViewSet):
     serializer_class = LessonModelSerializer
     queryset = Lesson.objects.all()
     lookup_url_kwarg = 'id'
-    permission_classes = (AllowAny,)
+    permission_classes = ()
 
 
 class CommentModelViewSet(ModelViewSet):
     serializer_class = CommentModelSerializer
     queryset = Comment.objects.all()
     lookup_url_kwarg = 'id'
-    permission_classes = (AllowAny,)
+    permission_classes = ()

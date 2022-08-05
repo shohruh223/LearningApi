@@ -6,7 +6,7 @@ from django.utils.text import slugify
 from apps.shared.models import DescriptionBaseModel, DeletedModel
 
 
-class CourseCategory(Model):
+class Category(Model):
     title = CharField(max_length=255)
     slug = SlugField(unique=True)
 
@@ -22,8 +22,8 @@ class CourseCategory(Model):
         return self.title
 
     class Meta:
-        verbose_name_plural = 'course_category'
-        db_table = 'course_category'
+        verbose_name_plural = 'categories'
+        db_table = 'category'
 
 
 # class IntegerRangeField(IntegerField):
@@ -48,12 +48,12 @@ class Course(DescriptionBaseModel, DeletedModel):
     logo = ImageField(upload_to='course-logos/')
     image = ImageField(upload_to='course-image/')
     price = PositiveIntegerField(default=300_000)
-    category = ForeignKey('CourseCategory', SET_NULL, null=True, blank=True)
+    category = ForeignKey('Category', SET_NULL, null=True, blank=True)
     slug = SlugField(unique=True)
     course_duration = PositiveSmallIntegerField(default=3)
     author = ForeignKey('users.User', CASCADE, 'author')
-    start_date = DateField()
-    end_date = DateField()
+    start_date = DateField(null=True, blank=True)
+    end_date = DateField(null=True, blank=True)
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         if not self.slug:
@@ -80,7 +80,7 @@ class Chapter(DescriptionBaseModel):
 
     class Meta:
         verbose_name_plural = 'Chapters'
-        db_table = 'course_chapter'
+        db_table = 'chapter'
 
 
 class Lesson(DescriptionBaseModel, DeletedModel):
@@ -102,7 +102,7 @@ class Lesson(DescriptionBaseModel, DeletedModel):
 
     class Meta:
         verbose_name_plural = 'Lessons'
-        db_table = 'course_lesson'
+        db_table = 'lesson'
 
 
 class Comment(DescriptionBaseModel, DeletedModel):
@@ -114,4 +114,4 @@ class Comment(DescriptionBaseModel, DeletedModel):
 
     class Meta:
         verbose_name_plural = 'Comments'
-        db_table = 'course_comment'
+        db_table = 'comment'

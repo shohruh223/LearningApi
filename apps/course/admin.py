@@ -1,12 +1,15 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from apps.course.models import Course, Chapter, CourseCategory
+from apps.course.models import Course, Chapter, Category
 from apps.users.models import User
 
-admin.site.register(User, UserAdmin)
+
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    list_display = ['id', 'username']
 
 
-@admin.register(CourseCategory)
+@admin.register(Category)
 class CourseAdmin(admin.ModelAdmin):
     list_display = ['id', 'title']
 
