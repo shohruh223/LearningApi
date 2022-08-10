@@ -4,13 +4,17 @@ from apps.course.models import Course, Chapter, Category
 from apps.users.models import User
 
 
+class ImageMixin:
+    list_display = ('image', 'object_id', 'content_type')
+
+
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = ['id', 'username']
 
 
 @admin.register(Category)
-class CourseAdmin(admin.ModelAdmin):
+class CategoryAdmin(admin.ModelAdmin):
     list_display = ['id', 'title']
 
 
@@ -21,5 +25,5 @@ class CourseAdmin(admin.ModelAdmin):
 
 
 @admin.register(Chapter)
-class CourseAdmin(admin.ModelAdmin):
+class ChapterAdmin(admin.ModelAdmin):
     list_display = ['id', 'title']

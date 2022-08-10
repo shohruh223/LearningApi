@@ -1,32 +1,37 @@
+from django.shortcuts import render
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import MultiPartParser
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from apps.course.models import Category, Course, Chapter, Lesson, Comment
-from apps.course.serializers import CourseCategoryModelSerializer, CourseModelSerializer, ChapterModelSerializer, \
+from apps.course.serailizers.category import CategoryModelSerializer
+from apps.course.serailizers.course import CreateCourseModelSerializer, ListCourseModelSerializer, \
+    RetrieveCourseModelSerializer, UpdateCourseModelSerializer, DestroyCourseModelSerializer, CourseModelSerializer
+from apps.course.serializers import ChapterModelSerializer, \
     LessonModelSerializer, CommentModelSerializer
 
 
-class CoursePaginationAPIView(PageNumberPagination):
-    page_size_query_param = 'page_size'
-    max_page_size = 3
-    page_size = 3
+# class CoursePaginationAPIView(PageNumberPagination):
+#     page_size_query_param = 'page_size'
+#     max_page_size = 3
+#     page_size = 3
 
 
-class CourseCategoryAPIView(GenericAPIView):
+class CategoryAPIView(GenericAPIView):
     queryset = Category.objects.all()
-    serializer_class = CourseCategoryModelSerializer
-    pagination_class = CoursePaginationAPIView
+    serializer_class = CategoryModelSerializer
+
+    # pagination_class = CoursePaginationAPIView
 
     def post(self, request):
         """
         Create category here
         """
-        serializer = CourseCategoryModelSerializer(data=request.data)
+        serializer = CategoryModelSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             success_data = {
@@ -39,23 +44,41 @@ class CourseCategoryAPIView(GenericAPIView):
         All categories here
         """
         categories = Category.objects.all()
-        serializer = CourseCategoryModelSerializer(categories, many=True)
+        serializer = CategoryModelSerializer(categories, many=True)
         return Response(serializer.data, status.HTTP_200_OK)
 
 
 class CourseModelViewSet(ModelViewSet):
-    serializer_class = CourseModelSerializer
-    pagination_class = CoursePaginationAPIView
     queryset = Course.objects.all()
+    serializer_class = CourseModelSerializer
+    permission_classes = (IsAuthenticated, )
     lookup_url_kwarg = 'pk'
     parser_classes = (MultiPartParser,)
 
+    def get_serializer_class(self):
+        serializer_dict = {
+            'list': ListCourseModelSerializer,
+            'create': CreateCourseModelSerializer,
+            'retrieve': RetrieveCourseModelSerializer,
+            'put': UpdateCourseModelSerializer,
+            'delete': DestroyCourseModelSerializer
+        }
+        return serializer_dict.get(self.action, CourseModelSerializer)
 
-class CourserChapterAPIView(GenericAPIView):
+
+# class CourseModelViewSet(ModelViewSet):
+#     serializer_class = CourseModelSerializer
+#     # pagination_class = CoursePaginationAPIView
+#     queryset = Course.objects.all()
+#     lookup_url_kwarg = 'pk'
+#     parser_classes = (MultiPartParser,)
+
+
+class ChapterAPIView(GenericAPIView):
     serializer_class = ChapterModelSerializer
-    pagination_class = CoursePaginationAPIView
+    # pagination_class = CoursePaginationAPIView
     queryset = Chapter.objects.all()
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated, )
     lookup_url_kwarg = 'id'
 
     def post(self, request):
@@ -78,9 +101,10 @@ class CourserChapterAPIView(GenericAPIView):
         return Response(serializer.data, status.HTTP_200_OK)
 
 
-class CourseChapterDetailAPIView(GenericAPIView):
+class ChapterDetailAPIView(GenericAPIView):
     queryset = Chapter.objects.all()
     serializer_class = ChapterModelSerializer
+    permission_classes = (IsAuthenticated, )
 
     def put(self, request, pk, *args, **kwargs):
         chapter = Chapter.objects.get(pk=pk)
@@ -93,17 +117,18 @@ class CourseChapterDetailAPIView(GenericAPIView):
         return Response(data)
 
 
-class CourseLessonModelViewSet(ModelViewSet):
+class LessonModelViewSet(ModelViewSet):
     serializer_class = LessonModelSerializer
-    pagination_class = CoursePaginationAPIView
+    # pagination_class = CoursePaginationAPIView
     queryset = Lesson.objects.all()
     lookup_url_kwarg = 'id'
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated, )
 
 
-class CourseCommentModelViewSet(ModelViewSet):
+class CommentModelViewSet(ModelViewSet):
     serializer_class = CommentModelSerializer
-    pagination_class = CoursePaginationAPIView
+    # pagination_class = CoursePaginationAPIView
     queryset = Comment.objects.all()
     lookup_url_kwarg = 'id'
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated, )
+
