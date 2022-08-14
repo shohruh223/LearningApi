@@ -1,6 +1,8 @@
 from datetime import datetime
+
+from django.db.models import ForeignKey, CASCADE
 from rest_framework.exceptions import ValidationError
-from rest_framework.fields import CharField, SlugField, HiddenField, CurrentUserDefault, DateTimeField
+from rest_framework.fields import CharField, SlugField, HiddenField, CurrentUserDefault, DateTimeField, IntegerField
 from rest_framework.serializers import Serializer, ModelSerializer, HyperlinkedModelSerializer
 from apps.course.models import Category, Course, Chapter, Lesson, Comment
 
@@ -20,11 +22,11 @@ class ListCourseModelSerializer(ModelSerializer):
 
     def to_representation(self, instance):
         represent = super().to_representation(instance)
-        datetime_data = datetime.strptime(represent['created_at'], '%Y-%m-%d %H:%M:%S')
+        datetime_data = datetime.strptime(represent['create_at'], '%Y-%m-%d %H:%M:%S')
         if datetime_data.year < 2021:
             orginal_datetime = datetime_data
             datetime_data = datetime_data.replace(year=2020)
-            represent['created_at'] = datetime_data.strftime('%Y-%m-%d %H:%M:%S')
+            represent['create_at'] = datetime_data.strftime('%Y-%m-%d %H:%M:%S')
             represent['orginal_datetime'] = orginal_datetime
         return represent
 
@@ -33,53 +35,51 @@ class ListCourseModelSerializer(ModelSerializer):
 class CreateCourseModelSerializer(ModelSerializer):
     title = CharField(max_length=255)
     author = HiddenField(default=CurrentUserDefault())
-    deleted_at = DateTimeField(read_only=True)
 
-    def validate_title(self, title):
+    def validated_title(self, title):
         if Course.objects.filter(title=title).exists():
-            raise ValidationError('This course name already taken')
+            raise ValidationError('This category name already taken')
 
         return title
 
     class Meta:
         model = Course
-        fields = '__all__'
-        # exclude = ('type', 'is_deleted', 'deleted_at', 'updated_at')
-        # read_only_fields = ['deleted_at']
-        # write_only_fields = []
+        exclude = ('deleted_at', 'is_deleted')
 
 
 # Detail
 class RetrieveCourseModelSerializer(ModelSerializer):
-
-    class Meta:
-        model = Course
-        fields = '__all__'
-
-
-# put
-class UpdateCourseModelSerializer(ModelSerializer):
-
-    class Meta:
-        model = Course
-        fields = '__all__'
-
-    def update(self, instance, validated_data):
-        instance.course = validated_data.get('course', instance.course)
-        instance.save()
-        return instance
-
-
-# delete
-class DestroyCourseModelSerializer(ModelSerializer):
-
     class Meta:
         model = Course
         fields = ('id', 'title')
 
-    def preform_destroy(self, instance):
-        if instance.is_default == True:
-            raise ValueError("Cannot delete default system course")
-        return instance.delete()
+
+# put
+class UpdateCourseModelSerializer(ModelSerializer):
+    title = CharField(max_length=255, required=False)
+    # slug = SlugField(required=True)
+
+    class Meta:
+        model = Course
+        exclude = ('deleted_at', 'is_deleted')
+
+
+#patch
+class PartialUpdateCourseModelSerializer(ModelSerializer):
+    title = CharField(max_length=255, required=False)
+    # slug = SlugField(required=True)
+
+    class Meta:
+        model = Course
+        exclude = ('deleted_at', 'is_deleted')
+        read_only_fields = ('start_of_working_day', 'end_of_working_day')
+
+
+# delete
+class DestroyCourseModelSerializer(ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ('id', 'title')
+
 
 

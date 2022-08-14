@@ -30,9 +30,7 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     # apps
-    path('', include('apps.billing.urls')),
-    path('', include('apps.users.urls')),
-    path('', include('apps.course.urls')),
+    path('', include('apps.urls'))
 ]
 
 if settings.DEBUG:

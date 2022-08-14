@@ -26,34 +26,23 @@ class Category(Model):
         db_table = 'category'
 
 
-# class IntegerRangeField(IntegerField):
-#     def __init__(self, verbose_name=None, name=None, min_value=None, max_value=None, **kwargs):
-#         self.min_value, self.max_value = min_value, max_value
-#         IntegerField.__init__(self, verbose_name, name, **kwargs)
-#
-#     def formfield(self, **kwargs):
-#         defaults = {'min_value': self.min_value, 'max_value': self.max_value}
-#         defaults.update(kwargs)
-#         return super(IntegerRangeField, self).formfield(**defaults)
-#
-
 class Course(DescriptionBaseModel, DeletedModel):
     title = CharField(max_length=255)
     rating = IntegerField(
         validators=[
-            MaxValueValidator(5, 'The higest mark is 5'),
-            MinValueValidator(2, 'The youngest mark is 2')
-        ]
+            MaxValueValidator(5, 'The highest mark is 5'),
+            MinValueValidator(2, 'The minimum mark is 2')
+        ], default=3
     )
-    logo = ImageField(upload_to='course-logos/')
-    image = ImageField(upload_to='course-image/')
+    logo = ImageField(upload_to='course-logos/', null=True, blank=True)
+    image = ImageField(upload_to='course-image/', null=True, blank=True)
     price = PositiveIntegerField(default=300_000)
     category = ForeignKey('Category', SET_NULL, null=True, blank=True)
-    slug = SlugField(unique=True)
     course_duration = PositiveSmallIntegerField(default=3)
-    author = ForeignKey('users.User', CASCADE, 'author')
+    author = ForeignKey('users.User', CASCADE, 'author', null=True, blank=True)
     start_date = DateField(null=True, blank=True)
     end_date = DateField(null=True, blank=True)
+    slug = SlugField(unique=True)
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         if not self.slug:

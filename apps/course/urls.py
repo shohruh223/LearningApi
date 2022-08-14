@@ -4,12 +4,13 @@ from rest_framework.routers import DefaultRouter
 from apps.course.views import CourseModelViewSet, LessonModelViewSet, \
     CommentModelViewSet, CategoryAPIView, ChapterAPIView, ChapterDetailAPIView
 
+
 router = DefaultRouter()
-
-router.register('comment', CommentModelViewSet),
+router.register('course', CourseModelViewSet),
 router.register('lesson', LessonModelViewSet),
-router.register('course', CourseModelViewSet)
-
+router.register('comment', CommentModelViewSet)
+# router.register('chapter', ChapterModelViewSet)
+# router.register('category-course', CategoryAPIView)
 
 urlpatterns = [
     path('', include(router.urls)),
